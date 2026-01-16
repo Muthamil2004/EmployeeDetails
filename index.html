@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muthamil Solutions - HR Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <section id="home-view" class="view">
+            <div class="home-content">
+                <div class="badge">ESTABLISHED 2026</div>
+                <h1>Muthamil <span class="highlight">Solutions</span></h1>
+                <p>Employee management system for adding, editing, and filtering team details.</p>
+                <button class="cta-btn" onclick="showView('dashboard-view')">VIEW EMPLOYEE DIRECTORY</button>
+            </div>
+        </section>
+
+        <section id="dashboard-view" class="view hidden">
+            <header class="view-header">
+                <button class="nav-btn" onclick="showView('home-view')">← BACK TO HOME</button>
+                <button class="add-btn" onclick="openRegistration()">+ ADD EMPLOYEE</button>
+            </header>
+            
+            <h2 class="view-title attractive-title">Team Directory</h2>
+
+            <div class="filter-container">
+                <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="applyFilters()">
+                <select id="deptFilter" onchange="applyFilters()">
+                    <option value="all">All Departments</option>
+                    <option value="SALES">Sales</option>
+                    <option value="PURCHASE">Purchase</option>
+                    <option value="PRODUCTION">Production</option>
+                    <option value="MARKETING">Marketing</option>
+                </select>
+            </div>
+
+            <div class="scroll-area">
+                <div id="noMatchMessage" class="no-match">No Match Found</div>
+                <div class="employee-list" id="employee-list"></div>
+            </div>
+        </section>
+
+        <section id="form-view" class="view hidden">
+            <header class="view-header">
+                <button class="nav-btn" onclick="cancelForm()">← CANCEL</button>
+            </header>
+            <div class="form-card">
+                <h2 id="formTitle">Registration</h2>
+                
+                <div class="upload-zone" onclick="document.getElementById('imageUpload').click()">
+                    <div class="image-preview" id="imagePreview">
+                        <span id="preview-text">UPLOAD IMAGE</span>
+                    </div>
+                    <p class="upload-hint">Click circle to select photo</p>
+                    <input type="file" id="imageUpload" accept="image/*" hidden>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="empName" placeholder="NAME" class="uppercase-input">
+                    <input type="email" id="empEmail" placeholder="EMAIL ADDRESS">
+                    <input type="text" id="empNumber" placeholder="PHONE NUMBER" inputmode="numeric" oninput="validatePhone(this)">
+                    <small id="phoneError" class="error-text">10 digits required</small>
+                    
+                    <select id="empDept" class="dept-select">
+                        <option value="" disabled selected>SELECT DEPARTMENT</option>
+                        <option value="SALES">Sales</option>
+                        <option value="PURCHASE">Purchase</option>
+                        <option value="PRODUCTION">Production</option>
+                        <option value="MARKETING">Marketing</option>
+                    </select>
+
+                    <button id="submitBtn" class="submit-btn" onclick="addEmployee()">SAVE TO DIRECTORY</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
