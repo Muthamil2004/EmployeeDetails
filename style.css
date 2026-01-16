@@ -34,7 +34,7 @@ h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 15px; color: white; }
 .highlight { color: var(--accent); }
 #home-view p { font-size: 1.1rem; margin-bottom: 30px; opacity: 0.9; line-height: 1.6; }
 
-/* DIRECTORY HEADER */
+/* TITLES & HEADERS */
 .attractive-title {
     background: linear-gradient(45deg, #38bdf8, #818cf8, #c084fc);
     -webkit-background-clip: text;
@@ -42,67 +42,35 @@ h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 15px; color: white; }
     font-weight: 800; font-size: 2.8rem; text-align: center; margin-bottom: 25px;
 }
 
-.view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; width: 100%; max-width: 800px; margin: 0 auto 30px; }
+.view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; width: 100%; max-width: 800px; margin: 0 auto; }
+.header-right { display: flex; gap: 10px; }
 
 /* BUTTONS */
 .nav-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 .add-btn { background: var(--accent); color: black; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.clear-btn { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger); padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 .cta-btn { background: var(--accent); padding: 18px 45px; border: none; border-radius: 50px; font-weight: 800; cursor: pointer; color: black; font-size: 1.1rem; text-transform: uppercase; }
 .submit-btn { width: 100%; padding: 15px; background: var(--bg); color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
 .edit-btn { background: #e0f2fe; color: #0369a1; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 8px; }
 .del-btn { background: #fee2e2; color: var(--danger); border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 
-/* FILTER & LIST */
+/* IMAGE UPLOAD CIRCLE FIX */
+.upload-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px; cursor: pointer; }
+.image-preview { 
+    width: 120px; height: 120px; border-radius: 50%; 
+    border: 3px dashed var(--accent); display: flex; align-items: center; 
+    justify-content: center; overflow: hidden; background-color: #f8fafc;
+}
+.upload-hint { font-size: 0.8rem; color: #64748b; margin-top: 10px; }
+
+/* FORM & LIST */
 .filter-container { display: flex; gap: 10px; max-width: 600px; margin: 0 auto 20px auto; width: 100%; }
 .filter-container input, .filter-container select, .dept-select { padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; outline: none; }
 .scroll-area { flex: 1; overflow-y: auto; }
 .employee-list { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
-.employee-card { background: white; padding: 20px; border-radius: 16px; display: flex; align-items: center; gap: 20px; box-shadow: var(--card-shadow); }
+.employee-card { background: white; padding: 20px; border-radius: 16px; display: flex; align-items: center; gap: 20px; box-shadow: var(--card-shadow); color: #1e293b; }
 .card-img { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); }
-
-/* FORM */
-.form-card { background: white; margin: auto; padding: 30px; border-radius: 20px; width: 95%; max-width: 400px; text-align: center; }
-.error-text { color: var(--danger); display: none; font-size: 0.8rem; text-align: left; }
+.form-card { background: white; margin: auto; padding: 30px; border-radius: 20px; width: 95%; max-width: 400px; text-align: center; color: #333; }
+.error-text { color: var(--danger); display: none; font-size: 0.8rem; }
 .no-match { display: none; color: #94a3b8; text-align: center; font-weight: 700; margin-top: 20px; }
 .uppercase-input { text-transform: uppercase; }
-/* Center the upload area and ensure it's visible */
-.upload-zone {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-    cursor: pointer;
-}
-
-/* This creates the actual circle */
-.image-preview {
-    width: 120px;           /* Fixed width */
-    height: 120px;          /* Fixed height */
-    border-radius: 50%;     /* Makes it a circle */
-    border: 3px dashed var(--accent); /* Visible dashed border */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;       /* Keeps the uploaded image inside the circle */
-    background-color: #f8fafc; /* Light background so you can see it */
-    transition: all 0.3s ease;
-}
-
-.image-preview:hover {
-    border-color: #0ea5e9;
-    background-color: #f0f9ff;
-}
-
-#preview-text {
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: var(--accent);
-    text-align: center;
-}
-
-.upload-hint {
-    font-size: 0.8rem;
-    color: #64748b;
-    margin-top: 10px;
-}

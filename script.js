@@ -1,7 +1,11 @@
 let currentPhoto = null;
 let editTargetCard = null;
 
-// View switcher
+// Load data when page opens
+window.onload = function() {
+    loadEmployees();
+};
+
 function showView(viewId) {
     document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
     document.getElementById(viewId).classList.remove('hidden');
@@ -12,24 +16,21 @@ function openRegistration() {
     showView('form-view');
 }
 
-// Mobile-friendly phone validation
 function validatePhone(input) {
     input.value = input.value.replace(/\D/g, '');
     const errorText = document.getElementById('phoneError');
     errorText.style.display = (input.value.length > 0 && input.value.length !== 10) ? 'block' : 'none';
 }
 
-// Image preview handler
 document.getElementById('imageUpload').addEventListener('change', function(e) {
     const reader = new FileReader();
     reader.onload = function() {
         currentPhoto = reader.result;
         document.getElementById('imagePreview').innerHTML = `<img src="${currentPhoto}" style="width:100%; height:100%; object-fit:cover;">`;
     };
-    reader.readAsDataURL(e.target.files[0]);
+    if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
 });
 
-// Search and Department filtering
 function applyFilters() {
     const nameQuery = document.getElementById('searchInput').value.toUpperCase();
     const deptFilter = document.getElementById('deptFilter').value;
@@ -50,7 +51,6 @@ function applyFilters() {
     document.getElementById('noMatchMessage').style.display = (count === 0) ? 'block' : 'none';
 }
 
-// Add or Update Employee
 function addEmployee() {
     const name = document.getElementById('empName').value.toUpperCase();
     const email = document.getElementById('empEmail').value;
@@ -58,7 +58,7 @@ function addEmployee() {
     const dept = document.getElementById('empDept').value;
 
     if (!name || !email || phone.length !== 10 || !dept || !currentPhoto) {
-        alert("Please complete all fields (10-digit phone and photo required)");
+        alert("Please complete all fields correctly.");
         return;
     }
 
@@ -71,6 +71,7 @@ function addEmployee() {
         document.getElementById('employee-list').appendChild(card);
     }
 
+    saveEmployees();
     resetForm();
     showView('dashboard-view');
 }
@@ -85,15 +86,29 @@ function updateCard(card, name, email, phone, dept, photo) {
     card.innerHTML = `
         <img src="${photo}" class="card-img">
         <div style="flex:1">
-            <h3 style="color:#1e293b">${name}</h3>
+            <h3>${name}</h3>
             <p><strong>Dept:</strong> ${dept}</p>
             <p>${email} | ${phone}</p>
         </div>
         <div>
             <button class="edit-btn" onclick="prepareEdit(this.parentElement.parentElement)">Edit</button>
-            <button class="del-btn" onclick="this.parentElement.parentElement.remove(); applyFilters();">Delete</button>
+            <button class="del-btn" onclick="deleteEmployee(this.parentElement.parentElement)">Delete</button>
         </div>`;
     editTargetCard = null;
+}
+
+function deleteEmployee(card) {
+    card.remove();
+    saveEmployees();
+    applyFilters();
+}
+
+function clearAllEmployees() {
+    if (confirm("Delete ALL employees permanently?")) {
+        document.getElementById('employee-list').innerHTML = '';
+        localStorage.removeItem('muthamilEmployees');
+        applyFilters();
+    }
 }
 
 function prepareEdit(card) {
@@ -108,10 +123,35 @@ function prepareEdit(card) {
     showView('form-view');
 }
 
+function saveEmployees() {
+    const cards = document.querySelectorAll('.employee-card');
+    const data = Array.from(cards).map(card => ({
+        name: card.dataset.name,
+        email: card.dataset.email,
+        phone: card.dataset.phone,
+        dept: card.dataset.dept,
+        photo: card.dataset.photo
+    }));
+    localStorage.setItem('muthamilEmployees', JSON.stringify(data));
+}
+
+function loadEmployees() {
+    const saved = localStorage.getItem('muthamilEmployees');
+    if (saved) {
+        JSON.parse(saved).forEach(emp => {
+            const card = document.createElement('div');
+            card.className = 'employee-card';
+            updateCard(card, emp.name, emp.email, emp.phone, emp.dept, emp.photo);
+            document.getElementById('employee-list').appendChild(card);
+        });
+    }
+}
+
 function resetForm() {
     document.getElementById('empName').value = '';
     document.getElementById('empEmail').value = '';
     document.getElementById('empNumber').value = '';
+    document.getElementById('empDept').value = '';
     document.getElementById('imagePreview').innerHTML = '<span>UPLOAD IMAGE</span>';
     document.getElementById('formTitle').innerText = "Registration";
     currentPhoto = null;
