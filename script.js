@@ -1,25 +1,25 @@
+// This link connects your website to your Firebase cloud database
+const DB_URL = "https://muthamil-hr-default-rtdb.firebaseio.com/employees.json";
+
 let currentPhoto = null;
 let editTargetCard = null;
 
-// Load data when page opens
-window.onload = function() {
-    loadEmployees();
-};
+// Automatically load data from the cloud when the page opens
+window.onload = loadEmployees;
 
 function showView(viewId) {
     document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
     document.getElementById(viewId).classList.remove('hidden');
 }
 
-function openRegistration() {
-    resetForm();
-    showView('form-view');
+function openRegistration() { 
+    resetForm(); 
+    showView('form-view'); 
 }
 
 function validatePhone(input) {
     input.value = input.value.replace(/\D/g, '');
-    const errorText = document.getElementById('phoneError');
-    errorText.style.display = (input.value.length > 0 && input.value.length !== 10) ? 'block' : 'none';
+    document.getElementById('phoneError').style.display = (input.value.length > 0 && input.value.length !== 10) ? 'block' : 'none';
 }
 
 document.getElementById('imageUpload').addEventListener('change', function(e) {
@@ -28,50 +28,28 @@ document.getElementById('imageUpload').addEventListener('change', function(e) {
         currentPhoto = reader.result;
         document.getElementById('imagePreview').innerHTML = `<img src="${currentPhoto}" style="width:100%; height:100%; object-fit:cover;">`;
     };
-    if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
+    if (e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
 });
 
-function applyFilters() {
-    const nameQuery = document.getElementById('searchInput').value.toUpperCase();
-    const deptFilter = document.getElementById('deptFilter').value;
-    const cards = document.querySelectorAll('.employee-card');
-    let count = 0;
-
-    cards.forEach(card => {
-        const matchesName = card.dataset.name.includes(nameQuery);
-        const matchesDept = (deptFilter === 'all' || card.dataset.dept === deptFilter);
-        
-        if (matchesName && matchesDept) {
-            card.style.display = 'flex';
-            count++;
-        } else {
-            card.style.display = 'none';
-        }
-    });
-    document.getElementById('noMatchMessage').style.display = (count === 0) ? 'block' : 'none';
-}
-
-function addEmployee() {
+async function addEmployee() {
     const name = document.getElementById('empName').value.toUpperCase();
     const email = document.getElementById('empEmail').value;
     const phone = document.getElementById('empNumber').value;
     const dept = document.getElementById('empDept').value;
 
     if (!name || !email || phone.length !== 10 || !dept || !currentPhoto) {
-        alert("Please complete all fields correctly.");
+        alert("Please fill all details correctly (10-digit phone and photo required)");
         return;
     }
 
-    if (editTargetCard) {
-        updateCard(editTargetCard, name, email, phone, dept, currentPhoto);
-    } else {
-        const card = document.createElement('div');
-        card.className = 'employee-card';
-        updateCard(card, name, email, phone, dept, currentPhoto);
-        document.getElementById('employee-list').appendChild(card);
-    }
+    if (editTargetCard) editTargetCard.remove(); 
+    
+    const card = document.createElement('div');
+    card.className = 'employee-card';
+    updateCard(card, name, email, phone, dept, currentPhoto);
+    document.getElementById('employee-list').appendChild(card);
 
-    saveEmployees();
+    await saveEmployees(); // Save to Firebase
     resetForm();
     showView('dashboard-view');
 }
@@ -94,20 +72,50 @@ function updateCard(card, name, email, phone, dept, photo) {
             <button class="edit-btn" onclick="prepareEdit(this.parentElement.parentElement)">Edit</button>
             <button class="del-btn" onclick="deleteEmployee(this.parentElement.parentElement)">Delete</button>
         </div>`;
-    editTargetCard = null;
 }
 
-function deleteEmployee(card) {
+// Uploads the current list to the Firebase cloud
+async function saveEmployees() {
+    const cards = document.querySelectorAll('.employee-card');
+    const data = Array.from(cards).map(card => ({
+        name: card.dataset.name,
+        email: card.dataset.email,
+        phone: card.dataset.phone,
+        dept: card.dataset.dept,
+        photo: card.dataset.photo
+    }));
+    await fetch(DB_URL, { method: 'PUT', body: JSON.stringify(data) });
+}
+
+// Fetches data from Firebase so it appears on any device
+async function loadEmployees() {
+    try {
+        const response = await fetch(DB_URL);
+        const data = await response.json();
+        const list = document.getElementById('employee-list');
+        list.innerHTML = '';
+        if (data) {
+            data.forEach(emp => {
+                const card = document.createElement('div');
+                card.className = 'employee-card';
+                updateCard(card, emp.name, emp.email, emp.phone, emp.dept, emp.photo);
+                list.appendChild(card);
+            });
+        }
+        applyFilters();
+    } catch (e) { console.error("Database connection failed", e); }
+}
+
+async function deleteEmployee(card) {
     card.remove();
-    saveEmployees();
+    await saveEmployees();
     applyFilters();
 }
 
-function clearAllEmployees() {
-    if (confirm("Delete ALL employees permanently?")) {
-        document.getElementById('employee-list').innerHTML = '';
-        localStorage.removeItem('muthamilEmployees');
-        applyFilters();
+async function clearAllEmployees() {
+    if (confirm("Permanently delete ALL employee records from the database?")) {
+        await fetch(DB_URL, { method: 'DELETE' });
+        loadEmployees();
     }
 }
 
@@ -123,28 +131,18 @@ function prepareEdit(card) {
     showView('form-view');
 }
 
-function saveEmployees() {
+function applyFilters() {
+    const nameQuery = document.getElementById('searchInput').value.toUpperCase();
+    const deptFilter = document.getElementById('deptFilter').value;
     const cards = document.querySelectorAll('.employee-card');
-    const data = Array.from(cards).map(card => ({
-        name: card.dataset.name,
-        email: card.dataset.email,
-        phone: card.dataset.phone,
-        dept: card.dataset.dept,
-        photo: card.dataset.photo
-    }));
-    localStorage.setItem('muthamilEmployees', JSON.stringify(data));
-}
-
-function loadEmployees() {
-    const saved = localStorage.getItem('muthamilEmployees');
-    if (saved) {
-        JSON.parse(saved).forEach(emp => {
-            const card = document.createElement('div');
-            card.className = 'employee-card';
-            updateCard(card, emp.name, emp.email, emp.phone, emp.dept, emp.photo);
-            document.getElementById('employee-list').appendChild(card);
-        });
-    }
+    let count = 0;
+    cards.forEach(card => {
+        const matchesName = card.dataset.name.includes(nameQuery);
+        const matchesDept = (deptFilter === 'all' || card.dataset.dept === deptFilter);
+        card.style.display = (matchesName && matchesDept) ? 'flex' : 'none';
+        if (matchesName && matchesDept) count++;
+    });
+    document.getElementById('noMatchMessage').style.display = (count === 0) ? 'block' : 'none';
 }
 
 function resetForm() {
@@ -154,7 +152,7 @@ function resetForm() {
     document.getElementById('empDept').value = '';
     document.getElementById('imagePreview').innerHTML = '<span>UPLOAD IMAGE</span>';
     document.getElementById('formTitle').innerText = "Registration";
-    currentPhoto = null;
+    currentPhoto = null; 
     editTargetCard = null;
 }
 

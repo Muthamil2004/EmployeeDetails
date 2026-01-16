@@ -8,9 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <div class="app-container">
-        
         <section id="home-view" class="view">
             <div class="home-content">
                 <div class="badge">ESTABLISHED 2026</div>
@@ -28,9 +26,7 @@
                     <button class="add-btn" onclick="openRegistration()">+ ADD EMPLOYEE</button>
                 </div>
             </header>
-            
             <h2 class="view-title attractive-title">Team Directory</h2>
-
             <div class="filter-container">
                 <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="applyFilters()">
                 <select id="deptFilter" onchange="applyFilters()">
@@ -41,7 +37,6 @@
                     <option value="MARKETING">Marketing</option>
                 </select>
             </div>
-
             <div class="scroll-area">
                 <div id="noMatchMessage" class="no-match">No Match Found</div>
                 <div class="employee-list" id="employee-list"></div>
@@ -49,26 +44,19 @@
         </section>
 
         <section id="form-view" class="view hidden">
-            <header class="view-header">
-                <button class="nav-btn" onclick="cancelForm()">← CANCEL</button>
-            </header>
+            <header class="view-header"><button class="nav-btn" onclick="cancelForm()">← CANCEL</button></header>
             <div class="form-card">
                 <h2 id="formTitle">Registration</h2>
-                
                 <div class="upload-zone" onclick="document.getElementById('imageUpload').click()">
-                    <div class="image-preview" id="imagePreview">
-                        <span id="preview-text">UPLOAD IMAGE</span>
-                    </div>
+                    <div class="image-preview" id="imagePreview"><span id="preview-text">UPLOAD IMAGE</span></div>
                     <p class="upload-hint">Click circle to select photo</p>
                     <input type="file" id="imageUpload" accept="image/*" hidden>
                 </div>
-
                 <div class="input-group">
                     <input type="text" id="empName" placeholder="NAME" class="uppercase-input">
                     <input type="email" id="empEmail" placeholder="EMAIL ADDRESS">
                     <input type="text" id="empNumber" placeholder="PHONE NUMBER" inputmode="numeric" oninput="validatePhone(this)">
                     <small id="phoneError" class="error-text">10 digits required</small>
-                    
                     <select id="empDept" class="dept-select">
                         <option value="" disabled selected>SELECT DEPARTMENT</option>
                         <option value="SALES">Sales</option>
@@ -76,13 +64,11 @@
                         <option value="PRODUCTION">Production</option>
                         <option value="MARKETING">Marketing</option>
                     </select>
-
                     <button id="submitBtn" class="submit-btn" onclick="addEmployee()">SAVE TO DIRECTORY</button>
                 </div>
             </div>
         </section>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
