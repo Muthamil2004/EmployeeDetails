@@ -9,16 +9,20 @@
 </head>
 <body>
     <div class="app-container">
+        <div id="toast-container" class="toast-container"></div>
+        
+        <audio id="warning-sound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
+
         <section id="home-view" class="view">
-    <div class="home-content-wrapper">
-        <div class="home-content">
-            <div class="badge">ESTABLISHED 2026</div>
-            <h1>Muthamil <span class="highlight">Solutions</span></h1>
-            <p>Advanced Employee Management Cloud System</p>
-            <button class="cta-btn" onclick="showView('dashboard-view')">VIEW DIRECTORY</button>
-        </div>
-    </div>
-</section>
+            <div class="home-content-wrapper">
+                <div class="home-content">
+                    <div class="badge">ESTABLISHED 2026</div>
+                    <h1>Muthamil <span class="highlight">Solutions</span></h1>
+                    <p>Advanced Employee Management Cloud System</p>
+                    <button class="cta-btn" onclick="showView('dashboard-view')">VIEW DIRECTORY</button>
+                </div>
+            </div>
+        </section>
 
         <section id="dashboard-view" class="view hidden">
             <header class="view-header">
@@ -32,8 +36,8 @@
             <h2 class="attractive-title">Team Directory</h2>
 
             <div class="filter-container">
-                <input type="text" id="searchInput" placeholder="Search name..." onkeyup="applyFilters()">
-                <select id="deptFilter" onchange="applyFilters()" class="dept-select">
+                <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="applyFilters()">
+                <select id="deptFilter" onchange="applyFilters()">
                     <option value="all">All Departments</option>
                     <option value="SALES">Sales</option>
                     <option value="PURCHASE">Purchase</option>
@@ -62,7 +66,7 @@
                     <input type="text" id="empName" placeholder="FULL NAME" class="cap-input">
                     <input type="email" id="empEmail" placeholder="EMAIL ADDRESS">
                     <input type="text" id="empNumber" placeholder="PHONE NUMBER (10 DIGITS)" maxlength="10">
-                    <select id="empDept" class="dept-select-main">
+                    <select id="empDept">
                         <option value="" disabled selected>SELECT DEPARTMENT</option>
                         <option value="SALES">Sales</option>
                         <option value="PURCHASE">Purchase</option>

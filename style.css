@@ -1,4 +1,3 @@
-/* --- GLOBAL SETTINGS --- */
 :root {
     --bg: #0b0f1a;
     --accent: #38bdf8;
@@ -8,288 +7,59 @@
     --card-bg: rgba(30, 41, 59, 0.7);
 }
 
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-    font-family: 'Inter', sans-serif; 
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body, html { height: 100vh; width: 100vw; overflow: hidden; background: var(--bg); color: white; }
 
-body, html { 
-    height: 100vh; 
-    width: 100vw; 
-    overflow: hidden; 
-    background: var(--bg); 
-    color: white; 
+/* TOAST WARNING STYLES */
+.toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; }
+.toast-message { 
+    background: rgba(255, 77, 77, 0.95); color: white; padding: 12px 25px; border-radius: 10px; 
+    font-weight: 800; border: 1px solid var(--danger); backdrop-filter: blur(10px);
+    box-shadow: 0 10px 40px rgba(255, 77, 77, 0.4);
+    animation: slideDown 0.4s ease forwards;
 }
+@keyframes slideDown { from { transform: translateY(-100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-/* --- VIEW MANAGEMENT --- */
-.view { 
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    display: flex; 
-    flex-direction: column; 
-    padding: 25px; 
-    background: var(--bg); 
-    z-index: 5; 
-}
+.view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 25px; background: var(--bg); z-index: 5; }
+.hidden { display: none !important; }
 
-.hidden { 
-    display: none !important; 
-}
-
-/* --- HOME PAGE (CONTENT AT BOTTOM) --- */
 #home-view {
-    display: flex;
-    justify-content: flex-end; /* Moves content to bottom */
-    align-items: center;
-    text-align: center;
-    padding-bottom: 80px; /* Space from bottom edge */
-    background: linear-gradient(to top, rgba(11, 15, 26, 1) 0%, rgba(11, 15, 26, 0.4) 100%), 
-                url('https://i.ibb.co/RpX23S3N/Picsart-26-01-17-12-37-59-832.jpg') no-repeat center center;
+    display: flex; justify-content: flex-end; align-items: center; text-align: center; padding-bottom: 80px;
+    background: linear-gradient(to top, rgba(11, 15, 26, 1), rgba(11, 15, 26, 0.4)), url('https://i.ibb.co/RpX23S3N/Picsart-26-01-17-12-37-59-832.jpg') no-repeat center center;
     background-size: cover;
 }
 
-.home-content h1 { 
-    font-size: 2.2rem; /* Reduced font size as requested */
-    font-weight: 800;
-    margin-bottom: 8px;
-    letter-spacing: -1px;
-    text-transform: none; /* Keep natural case for the heading */
-}
+select option { background-color: #1e293b; color: white; }
+.view-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.header-right { display: flex; gap: 12px; }
+.attractive-title { font-size: 1.8rem; text-align: center; margin-bottom: 20px; color: var(--accent); }
 
-.highlight { 
-    color: var(--accent); 
-}
+.filter-container { display: flex; gap: 10px; margin-bottom: 20px; }
+.filter-container input, .filter-container select { flex: 1; padding: 12px; border-radius: 10px; background: var(--glass); border: 1px solid var(--glass-border); color: white; outline: none; }
 
-.badge { 
-    background: var(--accent); 
-    color: black; 
-    padding: 5px 15px; 
-    border-radius: 20px; 
-    font-weight: 800; 
-    font-size: 0.75rem; 
-    margin-bottom: 15px;
-    display: inline-block;
-}
+.scroll-area { flex: 1; overflow-y: auto; }
+.employee-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 
-/* --- DIRECTORY HEADER & BUTTONS --- */
-.view-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 20px; 
-}
+.employee-card { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 15px; }
+.card-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+.card-info h3 { font-size: 1rem; color: var(--accent); text-transform: uppercase; }
+.card-info p { font-size: 0.8rem; color: #94a3b8; }
 
-.header-right { 
-    display: flex; 
-    gap: 12px; 
-}
+.form-card { background: var(--card-bg); padding: 30px; border-radius: 25px; width: 100%; max-width: 400px; margin: auto; text-align: center; }
+.image-preview { width: 100px; height: 100px; border-radius: 50%; border: 2px dashed var(--accent); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; }
 
-.attractive-title {
-    font-size: 1.8rem;
-    text-align: center;
-    margin-bottom: 20px;
-    color: var(--accent);
-}
+input, select { width: 100%; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 10px; margin-bottom: 10px; }
+.cap-input { text-transform: uppercase; }
 
-/* --- SCROLLING AREA --- */
-.scroll-area { 
-    flex: 1; 
-    overflow-y: auto; 
-    padding-right: 10px; 
-    scrollbar-width: thin; 
-    scrollbar-color: var(--accent) transparent; 
-}
+.cta-btn { background: var(--accent); color: black; padding: 12px 30px; border-radius: 50px; font-weight: 800; border: none; cursor: pointer; transition: 0.3s; margin-top: 10px;}
+.submit-btn { background: var(--accent); color: black; width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; }
+.nav-btn, .add-btn, .clear-btn { padding: 10px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
+.nav-btn { background: var(--glass); color: white; }
+.add-btn { background: var(--accent); color: black; }
+.clear-btn { background: rgba(255,77,77,0.1); border: 1px solid var(--danger); color: var(--danger); }
 
-/* Custom Scrollbar for Chrome/Safari */
-.scroll-area::-webkit-scrollbar { width: 6px; }
-.scroll-area::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-
-/* --- EMPLOYEE LIST GRID --- */
-.employee-list { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-    gap: 20px; 
-    padding-bottom: 30px;
-}
-
-/* --- EMPLOYEE CARD --- */
-.employee-card { 
-    background: var(--glass); 
-    backdrop-filter: blur(15px); 
-    border: 1px solid var(--glass-border); 
-    padding: 18px; 
-    border-radius: 20px; 
-    display: flex; 
-    align-items: center; 
-    gap: 15px; 
-    transition: transform 0.2s ease;
-}
-
-.employee-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--accent);
-}
-
-.card-img { 
-    width: 75px; 
-    height: 75px; 
-    border-radius: 50%; 
-    object-fit: cover; 
-    border: 2px solid var(--accent); 
-}
-
-.card-info h3 { 
-    font-size: 1rem; 
-    color: var(--accent); 
-    margin-bottom: 3px; 
-    text-transform: uppercase; /* Force capitals in cards */
-}
-
-.card-info p { 
-    font-size: 0.8rem; 
-    color: #94a3b8; 
-    line-height: 1.4;
-}
-
-/* --- FORM & INPUTS --- */
-.form-card { 
-    background: var(--card-bg); 
-    backdrop-filter: blur(20px); 
-    border: 1px solid var(--glass-border); 
-    padding: 30px; 
-    border-radius: 25px; 
-    width: 100%; 
-    max-width: 420px; 
-    margin: auto; 
-    text-align: center; 
-}
-
-.image-preview { 
-    width: 110px; 
-    height: 110px; 
-    border-radius: 50%; 
-    border: 2px dashed var(--accent); 
-    margin: 0 auto 20px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    overflow: hidden; 
-    cursor: pointer;
-}
-
-input, .dept-select-main, .dept-select { 
-    width: 100%; 
-    background: rgba(15, 23, 42, 0.8); 
-    border: 1px solid var(--glass-border); 
-    color: white; 
-    padding: 14px; 
-    border-radius: 12px; 
-    margin-bottom: 12px; 
-    outline: none; 
-    font-size: 0.9rem;
-}
-
-.cap-input { 
-    text-transform: uppercase; /* Shows capitals as user types */
-}
-
-/* --- DEPARTMENT DROPDOWN COLORS --- */
-.dept-select-main { 
-    background-color: #1e293b; 
-    color: var(--accent); 
-    font-weight: 600;
-}
-
-.dept-select-main option { 
-    background: #0b0f1a; 
-    color: white; 
-}
-
-/* --- BUTTON STYLING --- */
-.cta-btn { 
-    background: var(--accent); 
-    color: black; 
-    padding: 14px 35px; 
-    border-radius: 50px; 
-    border: none; 
-    font-weight: 800; 
-    cursor: pointer; 
-    font-size: 0.95rem;
-    transition: 0.3s;
-}
-
-.cta-btn:hover {
-    background: white;
-    transform: scale(1.05);
-}
-
-.add-btn { 
-    background: var(--accent); 
-    color: black; 
-    border: none; 
-    padding: 10px 18px; 
-    border-radius: 10px; 
-    font-weight: 700; 
-    cursor: pointer; 
-}
-
-.clear-btn { 
-    background: rgba(255, 77, 77, 0.1); 
-    color: var(--danger); 
-    border: 1px solid var(--danger); 
-    padding: 10px 18px; 
-    border-radius: 10px; 
-    cursor: pointer; 
-}
-
-.nav-btn { 
-    background: var(--glass); 
-    color: white; 
-    border: 1px solid var(--glass-border); 
-    padding: 10px 18px; 
-    border-radius: 10px; 
-    cursor: pointer; 
-}
-
-.submit-btn { 
-    background: var(--accent); 
-    color: black; 
-    width: 100%; 
-    padding: 14px; 
-    border-radius: 12px; 
-    border: none; 
-    font-weight: 800; 
-    cursor: pointer; 
-    margin-top: 10px;
-}
-
-.card-actions { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 8px; 
-}
-
-.edit-btn, .del-btn { 
-    padding: 6px 10px; 
-    border-radius: 6px; 
-    border: none; 
-    font-size: 0.7rem; 
-    font-weight: 800; 
-    cursor: pointer; 
-}
-
+.card-actions { display: flex; flex-direction: column; gap: 5px; }
+.edit-btn, .del-btn { padding: 5px 10px; border-radius: 5px; border: none; font-size: 0.7rem; font-weight: 800; cursor: pointer; }
 .edit-btn { background: var(--accent); color: black; }
 .del-btn { background: var(--danger); color: white; }
-
-.no-match { 
-    display: none; 
-    text-align: center; 
-    color: var(--danger); 
-    font-weight: 800; 
-    padding: 40px; 
-}
+.no-match { display: none; text-align: center; color: var(--danger); padding: 20px; font-weight: 800; }
