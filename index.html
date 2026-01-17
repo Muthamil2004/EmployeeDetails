@@ -13,23 +13,25 @@
             <div class="home-content">
                 <div class="badge">ESTABLISHED 2026</div>
                 <h1>Muthamil <span class="highlight">Solutions</span></h1>
-                <p>Employee management system for adding, editing, and filtering team details.</p>
-                <button class="cta-btn" onclick="showView('dashboard-view')">VIEW EMPLOYEE DIRECTORY</button>
+                <p>Advanced Employee Management Cloud System</p>
+                <button class="cta-btn" onclick="showView('dashboard-view')">VIEW DIRECTORY</button>
             </div>
         </section>
 
         <section id="dashboard-view" class="view hidden">
             <header class="view-header">
-                <button class="nav-btn" onclick="showView('home-view')">← BACK TO HOME</button>
+                <button class="nav-btn" onclick="showView('home-view')">← HOME</button>
                 <div class="header-right">
                     <button class="clear-btn" onclick="clearAllEmployees()">CLEAR ALL</button>
-                    <button class="add-btn" onclick="openRegistration()">+ ADD EMPLOYEE</button>
+                    <button class="add-btn" onclick="openRegistration()">+ ADD NEW</button>
                 </div>
             </header>
-            <h2 class="view-title attractive-title">Team Directory</h2>
+            
+            <h2 class="attractive-title">Team Directory</h2>
+
             <div class="filter-container">
-                <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="applyFilters()">
-                <select id="deptFilter" onchange="applyFilters()">
+                <input type="text" id="searchInput" placeholder="Search name..." onkeyup="applyFilters()">
+                <select id="deptFilter" onchange="applyFilters()" class="dept-select">
                     <option value="all">All Departments</option>
                     <option value="SALES">Sales</option>
                     <option value="PURCHASE">Purchase</option>
@@ -37,34 +39,35 @@
                     <option value="MARKETING">Marketing</option>
                 </select>
             </div>
+
             <div class="scroll-area">
-                <div id="noMatchMessage" class="no-match">No Match Found</div>
+                <div id="noMatchMessage" class="no-match">NO RESULTS FOUND</div>
                 <div class="employee-list" id="employee-list"></div>
             </div>
         </section>
 
         <section id="form-view" class="view hidden">
-            <header class="view-header"><button class="nav-btn" onclick="cancelForm()">← CANCEL</button></header>
+            <header class="view-header">
+                <button class="nav-btn" onclick="cancelForm()">← CANCEL</button>
+            </header>
             <div class="form-card">
                 <h2 id="formTitle">Registration</h2>
                 <div class="upload-zone" onclick="document.getElementById('imageUpload').click()">
-                    <div class="image-preview" id="imagePreview"><span id="preview-text">UPLOAD IMAGE</span></div>
-                    <p class="upload-hint">Click circle to select photo</p>
+                    <div class="image-preview" id="imagePreview"><span>UPLOAD PHOTO</span></div>
                     <input type="file" id="imageUpload" accept="image/*" hidden>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="empName" placeholder="NAME" class="uppercase-input">
+                    <input type="text" id="empName" placeholder="FULL NAME" class="cap-input">
                     <input type="email" id="empEmail" placeholder="EMAIL ADDRESS">
-                    <input type="text" id="empNumber" placeholder="PHONE NUMBER" inputmode="numeric" oninput="validatePhone(this)">
-                    <small id="phoneError" class="error-text">10 digits required</small>
-                    <select id="empDept" class="dept-select">
+                    <input type="text" id="empNumber" placeholder="PHONE NUMBER (10 DIGITS)" maxlength="10">
+                    <select id="empDept" class="dept-select-main">
                         <option value="" disabled selected>SELECT DEPARTMENT</option>
                         <option value="SALES">Sales</option>
                         <option value="PURCHASE">Purchase</option>
                         <option value="PRODUCTION">Production</option>
                         <option value="MARKETING">Marketing</option>
                     </select>
-                    <button id="submitBtn" class="submit-btn" onclick="addEmployee()">SAVE TO DIRECTORY</button>
+                    <button class="submit-btn" onclick="addEmployee()">SAVE TO CLOUD</button>
                 </div>
             </div>
         </section>

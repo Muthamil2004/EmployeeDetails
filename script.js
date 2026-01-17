@@ -1,25 +1,21 @@
-// This link connects your website to your Firebase cloud database
 const DB_URL = "https://muthamil-hr-default-rtdb.firebaseio.com/employees.json";
+const ADMIN_PASS = "Admin@123";
 
 let currentPhoto = null;
 let editTargetCard = null;
 
-// Automatically load data from the cloud when the page opens
 window.onload = loadEmployees;
 
 function showView(viewId) {
     document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-    document.getElementById(viewId).classList.remove('hidden');
+    const target = document.getElementById(viewId);
+    if(target) target.classList.remove('hidden');
 }
 
 function openRegistration() { 
     resetForm(); 
+    document.getElementById('formTitle').innerText = "Registration";
     showView('form-view'); 
-}
-
-function validatePhone(input) {
-    input.value = input.value.replace(/\D/g, '');
-    document.getElementById('phoneError').style.display = (input.value.length > 0 && input.value.length !== 10) ? 'block' : 'none';
 }
 
 document.getElementById('imageUpload').addEventListener('change', function(e) {
@@ -32,16 +28,22 @@ document.getElementById('imageUpload').addEventListener('change', function(e) {
 });
 
 async function addEmployee() {
-    const name = document.getElementById('empName').value.toUpperCase();
-    const email = document.getElementById('empEmail').value;
-    const phone = document.getElementById('empNumber').value;
+    const name = document.getElementById('empName').value.toUpperCase().trim();
+    const email = document.getElementById('empEmail').value.trim();
+    const phone = document.getElementById('empNumber').value.trim();
     const dept = document.getElementById('empDept').value;
 
-    if (!name || !email || phone.length !== 10 || !dept || !currentPhoto) {
-        alert("Please fill all details correctly (10-digit phone and photo required)");
+    if (!name || !email || !phone || !dept || !currentPhoto) {
+        alert("Fill all the details");
         return;
     }
 
+    if (!/^\d{10}$/.test(phone)) {
+        alert("Mobile number must be exactly 10 digits");
+        return;
+    }
+
+    // Move logic BEFORE the cloud save to make it feel instant
     if (editTargetCard) editTargetCard.remove(); 
     
     const card = document.createElement('div');
@@ -49,9 +51,13 @@ async function addEmployee() {
     updateCard(card, name, email, phone, dept, currentPhoto);
     document.getElementById('employee-list').appendChild(card);
 
-    await saveEmployees(); // Save to Firebase
+    // Save in background
+    saveEmployees(); 
+    
+    // Immediate Feedback and Exit
+    alert("Employee details saved. Go back to team directory page.");
     resetForm();
-    showView('dashboard-view');
+    showView('dashboard-view'); 
 }
 
 function updateCard(card, name, email, phone, dept, photo) {
@@ -63,18 +69,18 @@ function updateCard(card, name, email, phone, dept, photo) {
 
     card.innerHTML = `
         <img src="${photo}" class="card-img">
-        <div style="flex:1">
+        <div class="card-info" style="flex:1">
             <h3>${name}</h3>
-            <p><strong>Dept:</strong> ${dept}</p>
-            <p>${email} | ${phone}</p>
+            <p><strong>DEPT:</strong> ${dept}</p>
+            <p><strong>EMAIL:</strong> ${email}</p>
+            <p><strong>CALL:</strong> ${phone}</p>
         </div>
-        <div>
-            <button class="edit-btn" onclick="prepareEdit(this.parentElement.parentElement)">Edit</button>
-            <button class="del-btn" onclick="deleteEmployee(this.parentElement.parentElement)">Delete</button>
+        <div class="card-actions">
+            <button class="edit-btn" onclick="prepareEdit(this.closest('.employee-card'))">EDIT</button>
+            <button class="del-btn" onclick="deleteEmployee(this.closest('.employee-card'))">DELETE</button>
         </div>`;
 }
 
-// Uploads the current list to the Firebase cloud
 async function saveEmployees() {
     const cards = document.querySelectorAll('.employee-card');
     const data = Array.from(cards).map(card => ({
@@ -87,7 +93,6 @@ async function saveEmployees() {
     await fetch(DB_URL, { method: 'PUT', body: JSON.stringify(data) });
 }
 
-// Fetches data from Firebase so it appears on any device
 async function loadEmployees() {
     try {
         const response = await fetch(DB_URL);
@@ -102,21 +107,27 @@ async function loadEmployees() {
                 list.appendChild(card);
             });
         }
-        applyFilters();
-    } catch (e) { console.error("Database connection failed", e); }
+    } catch (e) { console.error(e); }
 }
 
 async function deleteEmployee(card) {
-    card.remove();
-    await saveEmployees();
-    applyFilters();
+    const p = prompt("Enter Admin Password to Delete:");
+    if (p === ADMIN_PASS) {
+        card.remove();
+        await saveEmployees();
+    } else if (p !== null) {
+        alert("Incorrect Password!");
+    }
 }
 
 async function clearAllEmployees() {
-    if (confirm("Permanently delete ALL employee records from the database?")) {
-        await fetch(DB_URL, { method: 'DELETE' });
-        loadEmployees();
-    }
+    const p = prompt("Enter Admin Password to Clear All:");
+    if (p === ADMIN_PASS) {
+        if(confirm("Wipe all data?")) {
+            await fetch(DB_URL, { method: 'DELETE' });
+            document.getElementById('employee-list').innerHTML = '';
+        }
+    } else if (p !== null) { alert("Wrong Password!"); }
 }
 
 function prepareEdit(card) {
@@ -127,22 +138,7 @@ function prepareEdit(card) {
     document.getElementById('empDept').value = card.dataset.dept;
     currentPhoto = card.dataset.photo;
     document.getElementById('imagePreview').innerHTML = `<img src="${currentPhoto}" style="width:100%; height:100%; object-fit:cover;">`;
-    document.getElementById('formTitle').innerText = "Edit Details";
     showView('form-view');
-}
-
-function applyFilters() {
-    const nameQuery = document.getElementById('searchInput').value.toUpperCase();
-    const deptFilter = document.getElementById('deptFilter').value;
-    const cards = document.querySelectorAll('.employee-card');
-    let count = 0;
-    cards.forEach(card => {
-        const matchesName = card.dataset.name.includes(nameQuery);
-        const matchesDept = (deptFilter === 'all' || card.dataset.dept === deptFilter);
-        card.style.display = (matchesName && matchesDept) ? 'flex' : 'none';
-        if (matchesName && matchesDept) count++;
-    });
-    document.getElementById('noMatchMessage').style.display = (count === 0) ? 'block' : 'none';
 }
 
 function resetForm() {
@@ -150,10 +146,21 @@ function resetForm() {
     document.getElementById('empEmail').value = '';
     document.getElementById('empNumber').value = '';
     document.getElementById('empDept').value = '';
-    document.getElementById('imagePreview').innerHTML = '<span>UPLOAD IMAGE</span>';
-    document.getElementById('formTitle').innerText = "Registration";
-    currentPhoto = null; 
-    editTargetCard = null;
+    document.getElementById('imagePreview').innerHTML = '<span>UPLOAD</span>';
+    currentPhoto = null; editTargetCard = null;
 }
 
 function cancelForm() { resetForm(); showView('dashboard-view'); }
+
+function applyFilters() {
+    const nameQ = document.getElementById('searchInput').value.toUpperCase();
+    const deptQ = document.getElementById('deptFilter').value;
+    const cards = document.querySelectorAll('.employee-card');
+    let count = 0;
+    cards.forEach(card => {
+        const match = card.dataset.name.includes(nameQ) && (deptQ === 'all' || card.dataset.dept === deptQ);
+        card.style.display = match ? 'flex' : 'none';
+        if (match) count++;
+    });
+    document.getElementById('noMatchMessage').style.display = (count === 0 && cards.length > 0) ? 'block' : 'none';
+}
