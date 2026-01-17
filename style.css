@@ -12,7 +12,7 @@ body, html { height: 100vh; width: 100vw; overflow: hidden; background: var(--bg
 .view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 25px; background: var(--bg); z-index: 5; }
 .hidden { display: none !important; }
 
-#home-view { display: flex; justify-content: center; align-items: center; text-align: center; background: linear-gradient(rgba(11, 15, 26, 0.8), rgba(11, 15, 26, 0.8)), url('https://i.ibb.co/hhjr2fF/IMG-20260115-165015-535.jpg') no-repeat center center; background-size: cover; }
+#home-view { display: flex; justify-content: center; align-items: center; text-align: center; background: linear-gradient(rgba(11, 15, 26, 0.8), rgba(11, 15, 26, 0.8)), url('https://i.ibb.co/RpX23S3N/Picsart-26-01-17-12-37-59-832.jpg') no-repeat center center; background-size: cover; }
 .home-content h1 { font-size: 4rem; font-weight: 800; }
 .highlight { color: var(--accent); }
 .badge { background: var(--accent); color: black; padding: 5px 15px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; margin-bottom: 20px; }
